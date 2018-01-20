@@ -13,8 +13,18 @@ var mushrooms = require('./routes/mushrooms');
 var app = express();
 
 // db connection
-mongoose.connect('mongodb://localhost:27017/dataset');
-var db = mongoose.connection;
+const uri = 'mongodb://localhost:27017/dataset';
+const options = {
+  useMongoClient: true,
+  autoIndex: false, // Don't build indexes
+  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 10, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 0
+};
+var db = mongoose.connect(uri, options);
+// var db = mongoose.connection;
 db.on('error', function(er) {
     console.log('Oh no, something wrong with MongoDB');
 });
